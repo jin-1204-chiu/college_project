@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <title>嘉義大飯店 - 會員中心</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/templatemo-tiya-golf-club.css') }}" rel="stylesheet">
+    </head>
+    
+    <body>
+        <main>
+            <nav class="navbar navbar-expand-lg">                
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+                        <img src="{{ url_for('static', filename='images/logo.jpg') }}" width="80" height="80">
+                        <span class="navbar-brand-text">
+                            Chiayi
+                            <small>The Most Luxurious Hotel</small>
+                        </span>
+                    </a>
+    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+    
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-lg-auto">
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('home') }}#section_1">主頁</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('home') }}#section_2">關於我們</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('home') }}#section_3">加入會員</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('home') }}#section_4">評價最高</a>
+                            </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('room.search_rooms') }}">查看房間</a>
+                            </li>
+                        </ul>
+
+                        <div class="d-none d-lg-block ms-lg-3">
+                            <a class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                            {% if session.get('user_name') %}
+                                {{ session.user_name }}
+                            {% else %}
+                                會員登入
+                            {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">                
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">會員登入</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                
+                <div class="offcanvas-body d-flex flex-column">
+                    {% if session.user_name %}
+                        <p class="text-white">歡迎，{{ session.user_name }}</p>
+                        <ul>
+                            <li><a href="{{ url_for('auth.profile') }}">選購清單</a></li>
+                            <li><a href="{{ url_for('auth.logout') }}">登出</a></li>
+                        </ul>
+                    {% else %}
+                       <p>請先登入</p>
+                    {% endif %}
+                </div>
+            </div>
+            
+
+            <section class="hero-section hero-50 d-flex justify-content-center align-items-center" id="section_1">
+                <div class="section-overlay"></div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <h1 class="text-white mb-4 pb-2">已訂購的房間</h1>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            
+
+            <section class="events-section section-padding" id="section_2">
+                <div class="container">
+                    <div class="row">
+                        <h3 class="mb-4">您的訂房清單</h3>
+                        {% if bookings %}
+                            {% for b in bookings %}
+                            <div class="col-lg-6 col-12 mb-4">
+                              <div class="card shadow p-3 rounded">
+                                <div class="row">
+                                  
+                                  <div class="col-md-7">
+                                    <h5>房號：{{ b.room_type }}0{{ b.room_id }}</h5>
+                                    <p>房型：{{ b.room_type }}人房</p>
+                                    <p>描述：{{ b.room_description }}</p>
+                                    <p>入住日期：{{ b.date_start }}</p>
+                                    <p>退房日期：{{ b.date_end }}</p>
+                                    <p>付款方式：{{ b.pay_type }}</p>
+
+                                    {% set stay_days = (b.date_end - b.date_start).days %}
+                                    <p>入住天數：{{ stay_days }} 晚</p>
+                                    <p>單日價格：${{ b.room_price }}</p>
+                                    <p><strong>總價：${{ b.room_price * stay_days }}</strong></p>
+
+                                    <button class="btn btn-danger" onclick="confirmCancel('{{ b.booking_id }}')">取消訂房</button>
+                                    
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ b.booking_id }}">編輯訂單</button>
+
+                                    <div class="modal fade" id="editModal{{ b.booking_id }}" tabindex="-1" aria-labelledby="editModalLabel{{ b.booking_id }}" aria-hidden="true">
+                                      <div class="modal-dialog">
+                                        <form method="POST" action="{{ url_for('room.edit_booking') }}">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="editModalLabel{{ b.booking_id }}">編輯訂單</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                              <input type="hidden" name="booking_id" value="{{ b.booking_id }}">
+                                              <input type="hidden" name="room_id" value="{{ b.room_id }}">
+
+                                              <label>入住日期:</label>
+                                              <input type="date" name="date_start" class="form-control edit-date-start" value="{{ b.date_start }}" required>
+
+                                              <label class="mt-2">退房日期:</label>
+                                              <input type="date" name="date_end" class="form-control edit-date-end" value="{{ b.date_end }}" required>
+
+                                              <label class="mt-2">付款方式:</label>
+                                              <select name="pay_type" class="form-control">
+                                                <option value="現金" {% if b.pay_type == '現金' %}selected{% endif %}>現金</option>
+                                                <option value="信用卡" {% if b.pay_type == '信用卡' %}selected{% endif %}>信用卡</option>
+                                                <option value="LinePay" {% if b.pay_type == 'LinePay' %}selected{% endif %}>LinePay</option>
+                                              </select>
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="submit" class="btn btn-success">儲存變更</button>
+                                            </div>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
+                                  </div>
+                                  
+                                  <div class="col-md-5">
+                                      <img src="{{ url_for('static', filename='images/room_' + b.room_id|string + '.jpg') }}"
+                                           class="img-fluid rounded" alt="房間圖片"
+                                           style="width: 300px; height: 200px; object-fit: cover;">
+                                  </div>
+                                    
+                                </div>
+                              </div>
+                            </div>
+
+                            {% endfor %}
+                        {% else %}
+                            <p>您目前沒有任何訂房紀錄。</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="site-footer">
+           <div class="container">
+               <div class="row">
+                   <div class="col-lg-3 col-5 ms-auto">
+                       <br><br>
+                       <h5 class="site-footer-title mb-4">歡迎在以下時間詢問我們</h5>
+                       <p class="d-flex border-bottom pb-3 mb-3 me-lg-3"><span>Mon-Fri</span> 6:00 AM - 6:00 PM</p>
+                       <p class="d-flex me-lg-3"><span>Sat-Sun</span> 6:30 AM - 8:30 PM</p>
+                       <br><br>
+                   </div>
+                   <div class="col-lg-2 col-12">
+                       <ul class="social-icon mt-lg-5 mt-3 mb-4">
+                           <li class="social-icon-item"><a href="#" class="social-icon-link bi-instagram"></a></li>
+                           <li class="social-icon-item"><a href="#" class="social-icon-link bi-twitter"></a></li>
+                           <li class="social-icon-item"><a href="#" class="social-icon-link bi-whatsapp"></a></li>
+                       </ul>
+                   </div>
+               </div>
+           </div>
+        </footer>
+
+        <script src={{ url_for('static', filename='js/jquery.min.js') }}></script>
+        <script src={{ url_for('static', filename='js/bootstrap.bundle.min.js') }}></script>
+        <script src={{ url_for('static', filename='js/jquery.sticky.js') }}></script>
+        <script src={{ url_for('static', filename='js/custom.js') }}></script>
+        
+        <script>
+        // 修正6: 更新 fetch 路徑為 /rooms/cancel
+        function confirmCancel(bookingId) {
+            if (confirm('確定要取消這筆訂房嗎？')) {
+                fetch('/rooms/cancel', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ booking_id: bookingId })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('已成功取消訂房');
+                        location.reload(); 
+                    } else {
+                        alert('取消失敗：' + (data.message || '未知錯誤'));
+                    }
+                })
+                .catch(err => {
+                    console.error(err);
+                    alert('系統錯誤');
+                });
+            }
+        }
+        </script>
+        <script>
+            // 日期限制腳本
+            const today = new Date().toISOString().split('T')[0];
+            document.addEventListener("DOMContentLoaded", function () {
+                // 注意：因為現在是迴圈生成多個 Modal，用 ID 可能會重複抓到第一個
+                // 建議改用 class 選擇器，或者在點開 Modal 時動態設定
+                // 這裡為了簡單，針對所有日期輸入框設最小值
+                const dateInputs = document.querySelectorAll('input[type="date"]');
+                dateInputs.forEach(input => {
+                    input.setAttribute("min", today);
+                });
+            });
+        </script>
+        
+    </body>
+</html>

@@ -1,0 +1,430 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <title>嘉義大飯店 - 房型搜尋</title>
+
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+        <link href="{{ url_for('static', filename='css/templatemo-tiya-golf-club.css') }}" rel="stylesheet">
+    </head>
+    
+    <body>
+
+        <main>
+
+            <nav class="navbar navbar-expand-lg">                
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('home') }}">
+                        <img src="{{ url_for('static', filename='images/logo.jpg') }}" width="80" height="80">
+                        <span class="navbar-brand-text">
+                            Chiayi
+                            <small>The Most Luxurious Hotel</small>
+                        </span>
+                    </a>
+    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+    
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-lg-auto">
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('home') }}#section_1">主頁</a>
+                            </li>
+    
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('home') }}#section_2">關於我們</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('home') }}#section_3">加入會員</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('home') }}#section_4">評價最高</a>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('room.search_rooms') }}">查看房間</a>
+                            </li>
+                        </ul>
+
+                        <div class="d-none d-lg-block ms-lg-3">
+                            <a class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                            {% if session.get('user_name') %}
+                                {{ session.user_name }}
+                            {% else %}
+                                會員登入
+                            {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">                
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">會員登入</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                
+                <div class="offcanvas-body d-flex flex-column">
+
+                    {% if session.user_name %}
+                        <p class="text-white">歡迎，{{ session.user_name }}</p>
+                        <ul>
+                            <li><a href="{{ url_for('auth.profile') }}">選購清單</a></li>
+                            <li><a href="{{ url_for('auth.logout') }}">登出</a></li>
+                        </ul>
+                    {% else %}
+                        <form id="login-form" class="custom-form member-login-form" method="post">
+                        <div class="member-login-form-body">
+                            <div class="mb-4">
+                                <label class="form-label mb-2" for="member-login-number">帳號</label>
+                                <input type="text" name="account" id="member-login-number" class="form-control" placeholder="Account" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label mb-2" for="member-login-password">密碼</label>
+                                <input type="password" name="password" id="member-login-password" class="form-control" placeholder="Password" required>
+                            </div>
+
+                            <button type="submit" class="form-control">Login</button>
+                        </div>
+                    </form>
+
+                    <script>
+                    document.getElementById('login-form').addEventListener('submit', function(e) {
+                        e.preventDefault(); 
+
+                        const formData = new FormData(this);
+
+                        // 修正4: Fetch 路徑改為 /auth/login
+                        fetch('/auth/login', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                location.reload();
+                            } else {
+                                alert('登入失敗，請確認帳號密碼');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('登入錯誤:', error);
+                            alert('登入過程發生錯誤');
+                        });
+                    });
+                    </script>
+
+                    {% endif %}
+
+                </div>
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3D405B" fill-opacity="1" d="M0,224L34.3,192C68.6,160,137,96,206,90.7C274.3,85,343,139,411,144C480,149,549,107,617,122.7C685.7,139,754,213,823,240C891.4,267,960,245,1029,224C1097.1,203,1166,181,1234,160C1302.9,139,1371,117,1406,106.7L1440,96L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path></svg>
+            </div>
+            
+
+            <section class="hero-section hero-50 d-flex justify-content-center align-items-center" id="section_1">
+                <div class="section-overlay"></div>
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-6 col-12">
+                            <h1 class="text-white mb-4 pb-2">選擇適合的房間</h1>
+                        </div>
+                    </div>
+                </div>
+                </section>
+            
+
+            <section class="events-section section-padding" id="section_2">
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-lg-12 col-12">
+                            <h2 class="mb-lg-5 mb-4">篩選條件查詢</h2>
+                        </div>
+                        
+                        <div>
+                        <form method="post">
+                            起始日期: <input type="date" name="date_start" id="filter-date-start" value="{{ date_start }}" min="{{ current_date }}">
+                            結束日期: <input type="date" name="date_end"  id="filter-date-end" value="{{ date_end }}">
+                            房型:
+                            <select name="room_type">
+                                <option value="">請選擇房型</option>
+                                <option value="1" {% if room_type == '1' %}selected{% endif %}>1 人房</option>
+                                <option value="2" {% if room_type == '2' %}selected{% endif %}>2 人房</option>
+                                <option value="3" {% if room_type == '3' %}selected{% endif %}>3 人房</option>
+                                <option value="4" {% if room_type == '4' %}selected{% endif %}>4 人房</option>
+                                <option value="6" {% if room_type == '6' %}selected{% endif %}>6 人房</option>
+                            </select>
+
+                            <button type="submit">查詢</button>
+                        </form>
+                        <br>
+                        <br>
+                        {% if rooms %}
+                        <h2 class="mb-4">空房列表</h2>
+
+                        <div class="row">
+                            {% for room in rooms %}
+                            <div class="col-lg-6 col-12 mb-5">
+                                <div class="custom-block-image-wrap">
+                                    <img src="{{ url_for('static', filename='images/room_' + room.room_id|string + '.jpg') }}"
+                                         class="custom-block-image img-fluid rounded" alt="Room Image"
+                                         style="width: 800px; height: 530px; object-fit: cover;">
+                                    
+                                    <div class="custom-btn-wrap">
+                                        {% if session.get('user_name') %}
+                                            <a href="javascript:void(0);" class="btn custom-btn"
+                                               onclick="openBookingModal(this, '{{ session.user_name }}', '{{ room.room_id }}', '{{ room.room_type }}', '{{ room.room_price }}', '現金')"
+                                               data-date-start="{{ date_start }}" data-date-end="{{ date_end }}">
+                                               訂房
+                                            </a>
+                                        {% else %}
+                                            <a href="javascript:void(0)" class="btn custom-btn" onclick="alert('請先登入會員才能訂房')">請先登入</a>
+                                        {% endif %}
+                                    </div>
+                                </div>
+
+                                <div class="custom-block-info">
+                                    <p class="events-title mb-2">房號: {{ room.room_type }}0{{ room.room_id }}</p>
+                                    <p>房型: {{ room.room_type }}</p>
+                                    <p class="mb-0">{{ room.room_description }}</p>
+
+                                    <div class="border-top mt-4 pt-3">
+                                        <div class="d-flex flex-wrap align-items-center">
+                                            <span class="custom-block-span">價格:</span>
+                                            <p class="mb-0">${{ room.room_price }}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                        {% endif %}
+
+                        </div>
+
+                    </div>
+                </div>
+            </section>
+            
+            <div class="modal fade" id="bookingModal" tabindex="-1" aria-labelledby="bookingModalLabel" aria-hidden="true">
+              <div class="modal-dialog">
+                <form method="POST" action="{{ url_for('room.booking_confirm') }}" id="booking-form">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h5 class="modal-title" id="bookingModalLabel">確認訂房資訊</h5>
+                      <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+
+                    <div class="modal-body">
+                      <input type="hidden" name="room_id" id="modal-room-id">
+                      <div class="mb-3">
+                        <label>姓名</label>
+                        <input type="text" class="form-control" id="modal-user-name" name="user_name" readonly>
+                      </div>
+                      <div class="mb-3">
+                        <label>房型</label>
+                        <input type="text" class="form-control" id="modal-room-type" readonly>
+                      </div>
+                      <div class="mb-3">
+                        <label>總價</label>
+                        <input type="text" class="form-control" id="modal-room-price" name="room_price" readonly>
+                      </div>
+                      
+                      <div class="mb-3">
+                        <label>入住日期</label>
+                        <input type="date" class="form-control" id="modal-date-start" name="date_start" readonly>
+                      </div>
+
+                      <div class="mb-3">
+                        <label>退房日期</label>
+                        <input type="date" class="form-control" id="modal-date-end" name="date_end" readonly>
+                      </div>
+
+                      <div class="mb-3">
+                        <label>付款方式</label>
+                        <select class="form-control" id="payment" name="payment" required>
+                          <option value="信用卡">信用卡</option>
+                          <option value="現金">現金</option>
+                          <option value="Line Pay">Line Pay</option>
+                        </select>
+                      </div>
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="submit" class="btn btn-primary">確認訂單</button>
+                      <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">取消</button>
+                    </div>
+                    
+                    <script>
+                    document.getElementById('booking-form').addEventListener('submit', function (e) {
+                        e.preventDefault(); 
+
+                        const formData = new FormData(this);
+
+                        // 修正6: Fetch 路徑改為 /rooms/booking_confirm
+                        fetch('/rooms/booking_confirm', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(res => res.text())
+                        .then(result => {
+                            if (result === 'success') {
+                                alert('訂房成功！');
+                                window.location.href = "{{ url_for('home') }}";
+                            } else {
+                                alert('訂房失敗，請稍後再試');
+                            }
+                        })
+                        .catch(error => {
+                            alert('伺服器錯誤：' + error);
+                        });
+                    });
+                    </script>
+                  </div>
+                </form>
+              </div>
+            </div>
+
+        </main>
+
+        <footer class="site-footer">
+             <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-3 col-5 ms-auto">
+                        <br>
+                        <br>
+                        <h5 class="site-footer-title mb-4">歡迎在以下時間詢問我們</h5>
+
+                        <p class="d-flex border-bottom pb-3 mb-3 me-lg-3">
+                            <span>Mon-Fri</span>
+                            6:00 AM - 6:00 PM
+                        </p>
+
+                        <p class="d-flex me-lg-3">
+                            <span>Sat-Sun</span>
+                            6:30 AM - 8:30 PM
+                        </p>
+                        <br>
+                        <br>
+                        
+                    </div>
+
+                        <div class="col-lg-2 col-12">
+                            <ul class="social-icon mt-lg-5 mt-3 mb-4">
+                                <li class="social-icon-item">
+                                    <a href="#" class="social-icon-link bi-instagram"></a>
+                                </li>
+
+                                <li class="social-icon-item">
+                                    <a href="#" class="social-icon-link bi-twitter"></a>
+                                </li>
+
+                                <li class="social-icon-item">
+                                    <a href="#" class="social-icon-link bi-whatsapp"></a>
+                                </li>
+                            </ul>
+                            
+                        </div>
+
+                </div>
+            </div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#81B29A" fill-opacity="1" d="M0,224L34.3,192C68.6,160,137,96,206,90.7C274.3,85,343,139,411,144C480,149,549,107,617,122.7C685.7,139,754,213,823,240C891.4,267,960,245,1029,224C1097.1,203,1166,181,1234,160C1302.9,139,1371,117,1406,106.7L1440,96L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path></svg>
+        </footer>
+
+        <script src={{ url_for('static', filename='js/jquery.min.js') }}></script>
+        <script src={{ url_for('static', filename='js/bootstrap.bundle.min.js') }}></script>
+        <script src={{ url_for('static', filename='js/jquery.sticky.js') }}></script>
+        <script src={{ url_for('static', filename='js/custom.js') }}></script>
+        
+        <script>
+        function openBookingModal(buttonElement, userName, roomId, roomType, roomPrice, payment = '信用卡') {
+            const dateStartStr = buttonElement.getAttribute('data-date-start');
+            const dateEndStr = buttonElement.getAttribute('data-date-end');
+
+            const dateStartInput = document.getElementById('modal-date-start');
+            const dateEndInput = document.getElementById('modal-date-end');
+
+            dateStartInput.value = dateStartStr;
+            dateEndInput.value = dateEndStr;
+
+            document.getElementById('modal-user-name').value = userName;
+            document.getElementById('modal-room-type').value = roomType;
+            document.getElementById('modal-room-id').value = roomId;
+            document.getElementById('payment').value = payment;
+
+            dateStartInput.addEventListener('change', function () {
+                dateEndInput.min = this.value;
+                if (dateEndInput.value < this.value) {
+                    dateEndInput.value = this.value;
+                }
+                calculateTotalPrice();
+            });
+
+            dateEndInput.addEventListener('change', function () {
+                calculateTotalPrice();
+            });
+
+            function calculateTotalPrice() {
+                const start = new Date(dateStartInput.value);
+                const end = new Date(dateEndInput.value);
+                let nights = (end - start) / (1000 * 60 * 60 * 24);
+                if (isNaN(nights) || nights <= 0) {
+                    nights = 0;
+                }
+                let totalPrice = nights * parseInt(roomPrice);
+                if (isNaN(totalPrice)) {
+                    totalPrice = 0;
+                }
+                document.getElementById("modal-room-price").value = '$' + totalPrice;
+            }
+
+            calculateTotalPrice();
+
+            const bookingModal = new bootstrap.Modal(document.getElementById('bookingModal'));
+            bookingModal.show();
+        }
+        </script>
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const startInput = document.getElementById('filter-date-start');
+            const endInput = document.getElementById('filter-date-end');
+
+            function addOneDay(dateStr) {
+                const date = new Date(dateStr);
+                date.setDate(date.getDate() + 1);
+                return date.toISOString().split('T')[0];
+            }
+
+            function updateEndMin() {
+                if (startInput.value) {
+                    const minEndDate = addOneDay(startInput.value);
+                    endInput.min = minEndDate;
+                    if (endInput.value < minEndDate) {
+                        endInput.value = minEndDate;
+                    }
+                }
+            }
+
+            if(startInput && endInput) {
+                updateEndMin();
+                startInput.addEventListener('change', updateEndMin);
+            }
+        });
+        </script>
+        
+    </body>
+</html>
