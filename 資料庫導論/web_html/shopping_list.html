@@ -1,0 +1,357 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+
+        <meta name="description" content="">
+        <meta name="author" content="">
+
+        <title>嘉義大飯店，嘉義最優質的住宿</title>
+
+        <!-- CSS FILES -->                
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+        <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,wght@0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+
+        <link href="{{ url_for('static', filename='css/bootstrap.min.css') }}" rel="stylesheet">
+
+        <link href="{{ url_for('static', filename='css/bootstrap-icons.css') }}" rel="stylesheet">
+
+        <link href="{{ url_for('static', filename='css/templatemo-tiya-golf-club.css') }}" rel="stylesheet">
+        
+<!--
+
+TemplateMo 587 Tiya Golf Club
+
+https://templatemo.com/tm-587-tiya-golf-club
+
+-->
+    </head>
+    
+    <body>
+
+        <main>
+
+            <nav class="navbar navbar-expand-lg">                
+                <div class="container">
+                    <a class="navbar-brand d-flex align-items-center" href="{{ url_for('hotel_homePage') }}">
+                        <img src="{{ url_for('static', filename='images/logo.jpg') }}" width="80" height="80">
+                        <span class="navbar-brand-text">
+                            Chiayi
+                            <small>The Most Luxurious Hotel</small>
+                        </span>
+                    </a>
+    
+                    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+    
+                    <div class="collapse navbar-collapse" id="navbarNav">
+                        <ul class="navbar-nav ms-lg-auto">
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('hotel_homePage') }}#section_1">主頁</a>
+                            </li>
+    
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('hotel_homePage') }}#section_2">關於我們</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('hotel_homePage') }}#section_3">加入會員</a>
+                            </li>
+
+                            <li class="nav-item">
+                                <a class="nav-link click-scroll" href="{{ url_for('hotel_homePage') }}#section_4">評價最高</a>
+                            </li>
+
+
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url_for('search_rooms') }}">查看房間</a>
+                            </li>
+
+                        </ul>
+
+                        <div class="d-none d-lg-block ms-lg-3">
+                            <a class="btn custom-btn custom-border-btn" data-bs-toggle="offcanvas" href="#offcanvasExample" role="button" aria-controls="offcanvasExample">
+                            {% if session.get('user_name') %}
+                                {{ session.user_name }}
+                            {% else %}
+                                會員登入
+                            {% endif %}
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </nav>
+
+            <div class="offcanvas offcanvas-end" data-bs-scroll="true" tabindex="-1" id="offcanvasExample" aria-labelledby="offcanvasExampleLabel">                
+                <div class="offcanvas-header">
+                    <h5 class="offcanvas-title" id="offcanvasExampleLabel">會員登入</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+                </div>
+                
+                <!-- 側邊欄或導覽列 -->
+                <div class="offcanvas-body d-flex flex-column">
+
+                    {% if session.user_name %}
+                        <p class="text-white">歡迎，{{ session.user_name }}</p>
+                        <ul>
+                            <li><a href="{{ url_for('shopping_list') }}">選購清單</a></li>
+                            <li><a href="{{ url_for('logout') }}">登出</a></li>
+                        </ul>
+                    {% else %}
+                        <!-- 登入表單 -->
+                        <form id="login-form" class="custom-form member-login-form" method="post">
+                        <div class="member-login-form-body">
+                            <div class="mb-4">
+                                <label class="form-label mb-2" for="member-login-number">帳號</label>
+                                <input type="text" name="account" id="member-login-number" class="form-control" placeholder="Account" required>
+                            </div>
+
+                            <div class="mb-4">
+                                <label class="form-label mb-2" for="member-login-password">密碼</label>
+                                <input type="password" name="password" id="member-login-password" class="form-control" placeholder="Password" required>
+                            </div>
+
+                            <button type="submit" class="form-control">Login</button>
+                        </div>
+                    </form>
+
+                    <script>
+                    document.getElementById('login-form').addEventListener('submit', function(e) {
+                        e.preventDefault();  // 阻止預設送出行為
+
+                        const formData = new FormData(this);
+
+                        fetch('/login', {
+                            method: 'POST',
+                            body: formData
+                        })
+                        .then(res => res.json())
+                        .then(data => {
+                            if (data.status === 'success') {
+                                location.reload();
+                            } else {
+                                alert('登入失敗，請確認帳號密碼');
+                            }
+                        })
+                        .catch(error => {
+                            console.error('登入錯誤:', error);
+                            alert('登入過程發生錯誤');
+                        });
+                    });
+                    </script>
+
+                    {% endif %}
+
+                </div>
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#3D405B" fill-opacity="1" d="M0,224L34.3,192C68.6,160,137,96,206,90.7C274.3,85,343,139,411,144C480,149,549,107,617,122.7C685.7,139,754,213,823,240C891.4,267,960,245,1029,224C1097.1,203,1166,181,1234,160C1302.9,139,1371,117,1406,106.7L1440,96L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path></svg>
+            </div>
+            
+
+            <section class="hero-section hero-50 d-flex justify-content-center align-items-center" id="section_1">
+
+                <div class="section-overlay"></div>
+
+                <svg viewBox="0 0 1962 178" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#3D405B" d="M 0 114 C 118.5 114 118.5 167 237 167 L 237 167 L 237 0 L 0 0 Z" stroke-width="0"></path> <path fill="#3D405B" d="M 236 167 C 373 167 373 128 510 128 L 510 128 L 510 0 L 236 0 Z" stroke-width="0"></path> <path fill="#3D405B" d="M 509 128 C 607 128 607 153 705 153 L 705 153 L 705 0 L 509 0 Z" stroke-width="0"></path><path fill="#3D405B" d="M 704 153 C 812 153 812 113 920 113 L 920 113 L 920 0 L 704 0 Z" stroke-width="0"></path><path fill="#3D405B" d="M 919 113 C 1048.5 113 1048.5 148 1178 148 L 1178 148 L 1178 0 L 919 0 Z" stroke-width="0"></path><path fill="#3D405B" d="M 1177 148 C 1359.5 148 1359.5 129 1542 129 L 1542 129 L 1542 0 L 1177 0 Z" stroke-width="0"></path><path fill="#3D405B" d="M 1541 129 C 1751.5 129 1751.5 138 1962 138 L 1962 138 L 1962 0 L 1541 0 Z" stroke-width="0"></path></svg>
+
+                <div class="container">
+                    <div class="row">
+
+                        <div class="col-lg-6 col-12">
+
+                            <h1 class="text-white mb-4 pb-2">已訂購的房間</h1>
+                            
+                        </div>
+
+                    </div>
+                </div>
+
+                <svg viewBox="0 0 1962 178" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"><path fill="#ffffff" d="M 0 114 C 118.5 114 118.5 167 237 167 L 237 167 L 237 0 L 0 0 Z" stroke-width="0"></path> <path fill="#ffffff" d="M 236 167 C 373 167 373 128 510 128 L 510 128 L 510 0 L 236 0 Z" stroke-width="0"></path> <path fill="#ffffff" d="M 509 128 C 607 128 607 153 705 153 L 705 153 L 705 0 L 509 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 704 153 C 812 153 812 113 920 113 L 920 113 L 920 0 L 704 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 919 113 C 1048.5 113 1048.5 148 1178 148 L 1178 148 L 1178 0 L 919 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 1177 148 C 1359.5 148 1359.5 129 1542 129 L 1542 129 L 1542 0 L 1177 0 Z" stroke-width="0"></path><path fill="#ffffff" d="M 1541 129 C 1751.5 129 1751.5 138 1962 138 L 1962 138 L 1962 0 L 1541 0 Z" stroke-width="0"></path></svg>
+            </section>
+            
+
+            <section class="events-section section-padding" id="section_2">
+                <div class="container">
+                    <div class="row">
+                        <h3 class="mb-4">您的訂房清單</h3>
+                        {% if bookings %}
+                            {% for b in bookings %}
+                            <div class="col-lg-6 col-12 mb-4">
+                              <div class="card shadow p-3 rounded">
+                                <div class="row">
+                                  
+                                  <div class="col-md-7">
+                                    <h5>房號：{{ b.room_type }}0{{ b.room_id }}</h5>
+                                    <p>房型：{{ b.room_type }}人房</p>
+                                    <p>描述：{{ b.room_description }}</p>
+                                    <p>入住日期：{{ b.date_start }}</p>
+                                    <p>退房日期：{{ b.date_end }}</p>
+                                    <p>付款方式：{{ b.pay_type }}</p>
+
+                                    {% set stay_days = (b.date_end - b.date_start).days %}
+                                    <p>入住天數：{{ stay_days }} 晚</p>
+                                    <p>單日價格：${{ b.room_price }}</p>
+                                    <p><strong>總價：${{ b.room_price * stay_days }}</strong></p>
+
+                                    <button class="btn btn-danger" onclick="confirmCancel('{{ b.booking_id }}')">取消訂房</button>
+                                    
+                                    <!-- 編輯按鈕 -->
+                                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#editModal{{ b.booking_id }}">編輯訂單</button>
+
+                                    <!-- Modal 彈出視窗 -->
+                                    <div class="modal fade" id="editModal{{ b.booking_id }}" tabindex="-1" aria-labelledby="editModalLabel{{ b.booking_id }}" aria-hidden="true">
+                                      <div class="modal-dialog">
+                                        <form method="POST" action="{{ url_for('edit_booking') }}">
+                                          <div class="modal-content">
+                                            <div class="modal-header">
+                                              <h5 class="modal-title" id="editModalLabel{{ b.booking_id }}">編輯訂單</h5>
+                                              <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                              <input type="hidden" name="booking_id" id="edit-date-start" value="{{ b.booking_id }}">
+                                              <input type="hidden" name="room_id" id="edit-date-end" value="{{ b.room_id }}">
+
+                                              <label>入住日期:</label>
+                                              <input type="date" name="date_start" class="form-control" value="{{ b.date_start }}" required>
+
+                                              <label class="mt-2">退房日期:</label>
+                                              <input type="date" name="date_end" class="form-control" value="{{ b.date_end }}" required>
+
+                                              <label class="mt-2">付款方式:</label>
+                                              <select name="pay_type" class="form-control">
+                                                <option value="現金" {% if b.pay_type == '現金' %}selected{% endif %}>現金</option>
+                                                <option value="信用卡" {% if b.pay_type == '信用卡' %}selected{% endif %}>信用卡</option>
+                                                <option value="LinePay" {% if b.pay_type == 'LinePay' %}selected{% endif %}>LinePay</option>
+                                              </select>
+                                            </div>
+                                            <div class="modal-footer">
+                                              <button type="submit" class="btn btn-success">儲存變更</button>
+                                            </div>
+                                          </div>
+                                        </form>
+                                      </div>
+                                    </div>
+
+             
+                                  </div>
+                                  
+                                  <div class="col-md-5">
+                                      <img src="{{ url_for('static', filename='images/room_' + b.room_id|string + '.jpg') }}"
+                                           class="img-fluid rounded" alt="房間圖片"
+                                           style="width: 300px; height: 200px; object-fit: cover;">
+                                  </div>
+                                    
+                                </div>
+                              </div>
+                            </div>
+
+                            {% endfor %}
+                        {% else %}
+                            <p>您目前沒有任何訂房紀錄。</p>
+                        {% endif %}
+                    </div>
+                </div>
+            </section>
+
+        </main>
+
+        <footer class="site-footer">
+            <div class="container">
+                <div class="row">
+
+                    <div class="col-lg-3 col-5 ms-auto">
+                        <br>
+                        <br>
+                        <h5 class="site-footer-title mb-4">歡迎在以下時間詢問我們</h5>
+
+                        <p class="d-flex border-bottom pb-3 mb-3 me-lg-3">
+                            <span>Mon-Fri</span>
+                            6:00 AM - 6:00 PM
+                        </p>
+
+                        <p class="d-flex me-lg-3">
+                            <span>Sat-Sun</span>
+                            6:30 AM - 8:30 PM
+                        </p>
+                        <br>
+                        <br>
+                        
+                    </div>
+
+                        <div class="col-lg-2 col-12">
+                            <ul class="social-icon mt-lg-5 mt-3 mb-4">
+                                <li class="social-icon-item">
+                                    <a href="#" class="social-icon-link bi-instagram"></a>
+                                </li>
+
+                                <li class="social-icon-item">
+                                    <a href="#" class="social-icon-link bi-twitter"></a>
+                                </li>
+
+                                <li class="social-icon-item">
+                                    <a href="#" class="social-icon-link bi-whatsapp"></a>
+                                </li>
+                            </ul>
+                            
+                        </div>
+
+                </div>
+            </div>
+
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 320"><path fill="#81B29A" fill-opacity="1" d="M0,224L34.3,192C68.6,160,137,96,206,90.7C274.3,85,343,139,411,144C480,149,549,107,617,122.7C685.7,139,754,213,823,240C891.4,267,960,245,1029,224C1097.1,203,1166,181,1234,160C1302.9,139,1371,117,1406,106.7L1440,96L1440,320L1405.7,320C1371.4,320,1303,320,1234,320C1165.7,320,1097,320,1029,320C960,320,891,320,823,320C754.3,320,686,320,617,320C548.6,320,480,320,411,320C342.9,320,274,320,206,320C137.1,320,69,320,34,320L0,320Z"></path></svg>
+        </footer>
+
+
+        <!-- JAVASCRIPT FILES -->
+        <script src={{ url_for('static', filename='js/jquery.min.js') }}></script>
+        <script src={{ url_for('static', filename='js/bootstrap.bundle.min.js') }}></script>
+        <script src={{ url_for('static', filename='js/jquery.sticky.js') }}></script>
+        <script src={{ url_for('static', filename='js/custom.js') }}></script>
+        <script>
+        function confirmCancel(bookingId) {
+            if (confirm('確定要取消這筆訂房嗎？')) {
+                fetch('/cancel_booking', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRFToken': '{{ csrf_token() if csrf_token else '' }}'  // 如果你有用 CSRF
+                    },
+                    body: JSON.stringify({ booking_id: bookingId })
+                })
+                .then(res => res.json())
+                .then(data => {
+                    if (data.status === 'success') {
+                        alert('已成功取消訂房');
+                        location.reload();  // 重整頁面讓資料消失
+                    } else {
+                        alert('取消失敗：' + data.message);
+                    }
+                });
+            }
+        }
+        </script>
+        <script>
+            const today = new Date().toISOString().split('T')[0];
+            document.addEventListener("DOMContentLoaded", function () {
+                const startInput = document.getElementById("edit-date-start");
+                const endInput = document.getElementById("edit-date-end");
+
+                startInput.setAttribute("min", today);
+                endInput.setAttribute("min", today);
+
+                startInput.addEventListener("change", function () {
+                    endInput.setAttribute("min", this.value);
+                });
+            });
+        </script>
+
+
+
+    </body>
+</html>

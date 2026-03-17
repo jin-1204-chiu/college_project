@@ -1,0 +1,2 @@
+ALTER TABLE Room
+ADD room_price INT NOT NULL DEFAULT 0;

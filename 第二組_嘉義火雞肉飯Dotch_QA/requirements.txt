@@ -1,0 +1,12 @@
+ollama
+gradio
+numpy
+PyPDF
+python-dotenv
+google-generativeai
+langchain-community
+langchain
+langchain-ollama
+langchain_chroma
+langchain-google-genai
+bs4
