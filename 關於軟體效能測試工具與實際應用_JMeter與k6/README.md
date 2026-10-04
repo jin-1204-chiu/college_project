@@ -52,7 +52,7 @@ http {
         }
     }
 }
-
+```
 
 *在此設定中，我們刻意將 `proxy_read_timeout` 與 `proxy_connect_timeout` 設為 3 秒，當系統壓力過載處理不及時，就會觸發 504 Gateway Timeout 錯誤。*
 
