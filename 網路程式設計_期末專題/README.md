@@ -1,7 +1,6 @@
 # 網路程式設計期末專案：數數小遊戲
 
 ## 🔗 相關連結
-* **專案簡報**：[Canva 報告連結](https://canva.link/xbrrq6tyf08pqqj)
 * **遊戲 Demo**：[YouTube 介紹影片](https://youtu.be/NclcfDqQdSg)
 
 ## 🎮 專案簡介
