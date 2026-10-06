@@ -18,6 +18,8 @@
 * 三個影片播放完畢後，系統會給出所有玩家的最終總分與名次排名。
 
 ## 🛠️ 系統架構與使用技術
+<img width="971" height="542" alt="image" src="https://github.com/user-attachments/assets/c9d7ba64-fd49-4b18-b268-335eca7cbcce" />
+
 本專案採用 Client-Server 架構進行開發，並運用了以下網路通訊與程式技術：
 * **TCP 連線**：用於客戶端與伺服器端之間的連線，並負責傳遞與接收玩家的計數訊息。
 * **UDP 廣播**：伺服器端透過 UDP 廣播的方式，將隨機選擇的題目資訊與影片名稱同步發送給所有客戶端。
