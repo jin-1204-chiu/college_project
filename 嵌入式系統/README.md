@@ -1,6 +1,12 @@
 # 專題簡介：Merry tree, Marry me
+<img width="540" height="721" alt="image" src="https://github.com/user-attachments/assets/78cc87ed-6bf6-47a5-8407-a7e8d3dae85d" />
+
 ## 🔗 相關連結
 * **Demo**：[YouTube 介紹影片](https://youtu.be/tX0Dwd4_uZA)
+
+* **電路圖**：
+<img width="755" height="436" alt="image" src="https://github.com/user-attachments/assets/43fdeb12-9dff-4208-99f1-67b9322b6800" />
+
 
 鄰近聖誕節，最不可或缺的就是聖誕樹。加上網路上大家對於「大二聖誕節」這個特別日子所產生的魔咒，團隊決定製作一個應景且可以同時解決單身問題的裝置。
 
