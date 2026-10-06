@@ -1,4 +1,5 @@
 # 網路程式設計期末專案：數數小遊戲
+<img width="1182" height="496" alt="image" src="https://github.com/user-attachments/assets/469697a3-2b67-4abd-b038-3e1a9cdcb2c7" />
 
 ## 🔗 相關連結
 * **遊戲 Demo**：[YouTube 介紹影片](https://youtu.be/NclcfDqQdSg)
