@@ -30,6 +30,9 @@
   2. **Phase 2 (全量重訓)**：為讓模型學習到最多特徵，將 Phase 1 切分出的驗證集與測試集全部加回訓練集 (Train+Val+Test) 進行最終模型訓練。
 * **模型解釋性**：透過 **Grad-CAM** 視覺化熱力圖 (Attention Map)，確認最終優化模型 (G5) 確實能精準聚焦在蝴蝶翅膀上的關鍵特徵區塊。
 * **最終驗證表現**：
+<img width="970" height="542" alt="image" src="https://github.com/user-attachments/assets/0ba70fba-3fc7-4c3f-aec0-ceccc689d9b2" />
+<img width="971" height="537" alt="image" src="https://github.com/user-attachments/assets/deeffc73-c2f7-4dd9-8595-6f8debb429e0" />
+
   * **整體準確率 (Accuracy)**：高達 **98%**。
   * **Hybrid 類別**：Precision 0.80, Recall **0.96**。
   * **Non-hybrid 類別**：Precision 1.00, Recall 0.99。
